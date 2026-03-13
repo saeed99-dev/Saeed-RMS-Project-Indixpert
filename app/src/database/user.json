@@ -1,0 +1,26 @@
+[
+    {
+        "name": "Saeed",
+        "email": "saeed@gmail.com",
+        "password": "Saeed@123",
+        "mobile": "7618762263",
+        "role": "Staff",
+        "id": "e5fe80c8"
+    },
+    {
+        "name": "Asif",
+        "email": "asif@gmail.com",
+        "password": "Asif#234",
+        "mobile": "7898675467",
+        "role": "Staff",
+        "id": "5d3bfb6f"
+    },
+    {
+        "name": "Shivam",
+        "email": "shiv@gmail.com",
+        "password": "Shivam&123",
+        "mobile": "9080706050",
+        "role": "Admin",
+        "id": "ea80cfb7"
+    }
+]
