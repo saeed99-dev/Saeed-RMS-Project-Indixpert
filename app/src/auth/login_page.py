@@ -1,6 +1,7 @@
 from src.filehandling.filemode import Filemode
 from src.dashboard.staff import staff_menu
 from src.dashboard.admin import admin_menu
+from src.security.validation import Validator
 
 
 class Login:
@@ -8,13 +9,12 @@ class Login:
         self.userdata = Filemode().load_data()
 
     def login(self):
+        valid=Validator()
         print("======= Login Portal =======")
         found = False
         while True:
-            input_email = input("Enter Your Email: ").strip()
-            input_password = input("Enter your Password: ").strip()
-
-            
+            input_email = valid.validemail()
+            input_password = valid.validpassword()
 
             for user in self.userdata:
                 if user["email"] == input_email and user["password"] == input_password:
