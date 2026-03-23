@@ -1,26 +1,42 @@
 [
     {
-        "name": "Saeed",
+        "name": "Asif",
         "email": "saeed@gmail.com",
-        "password": "Saeed@123",
-        "mobile": "7618762263",
+        "password": "Asif@123",
+        "mobile": "7519732202",
         "role": "Staff",
-        "id": "e5fe80c8"
+        "id": "965dc81f"
     },
     {
-        "name": "Asif",
-        "email": "asif@gmail.com",
-        "password": "Asif#234",
-        "mobile": "7898675467",
+        "name": "Saeed",
+        "email": "saeed@hotmail.com",
+        "password": "Saeed@123",
+        "mobile": "7519732202",
         "role": "Staff",
-        "id": "5d3bfb6f"
+        "id": "9bbd219c"
     },
     {
         "name": "Shivam",
         "email": "shiv@gmail.com",
-        "password": "Shivam&123",
-        "mobile": "9080706050",
-        "role": "Admin",
-        "id": "ea80cfb7"
+        "password": "Shivam@345",
+        "mobile": "7788676745",
+        "role": "Staff",
+        "id": "987abeb5"
+    },
+    {
+        "name": "Shahil",
+        "email": "shahil@gmail.com",
+        "password": "Shahil#568",
+        "mobile": "9876543210",
+        "role": "Staff",
+        "id": "292f3b55"
+    },
+    {
+        "name": "Hariom",
+        "email": "hari@gmail.com",
+        "password": "Hariom#123",
+        "mobile": "1020304500",
+        "role": "Staff",
+        "id": "70b2cfea"
     }
 ]
