@@ -2,49 +2,16 @@ import uuid
 from src.security.validation import Validator
 from src.filehandling.filemode import Filemode
 
-
-file=Filemode()
-Filemode().create_file()
-userdata=file.load_data()
-
-valid=Validator()
-
 class Signup:
-    # def __init__(self):
-    #     self.userdata=file.load_data()
-
-    def admin(self):
-        print("===== Admin Signup Portal =====")
-
-        while True:
-            email=valid.validemail()
-            email_exists=False
-            for data in userdata:
-                if data.get('email')==email:
-                    email_exists=True
-                    break
-            if email_exists:
-                print(f"Error: This email {email} is already registered.")
-            else:
-                break
- 
-        user={
-            "name":valid.validname(),
-            "email":valid.validemail(),
-            "password":valid.validpassword(),
-            "mobile":valid.validnumber(),
-            "role":"Admin",
-            "id":str(uuid.uuid4())[0:8]
-        }
-
-        userdata.append(user)
-        file.save_data(userdata)    
-        print("Signup Successfully!")
-
-
-
+    
     def staff(self):
-        print("===== Staff Signup Portal =====")
+        file=Filemode()
+        Filemode().create_file()
+        userdata=file.load_data()
+
+        valid=Validator()
+
+        print("===== Signup Portal =====")
 
         while True:
             email=valid.validemail()
@@ -60,7 +27,7 @@ class Signup:
         
         user={
             "name":valid.validname(),
-            "email":valid.validemail(),
+            "email":email,
             "password":valid.validpassword(),
             "mobile":valid.validnumber(),
             "role":"Staff",
