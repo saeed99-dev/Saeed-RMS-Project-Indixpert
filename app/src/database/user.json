@@ -1,7 +1,7 @@
 [
     {
         "name": "Asif",
-        "email": "saeed@gmail.com",
+        "email": "asif@gmail.com",
         "password": "Asif@123",
         "mobile": "7519732202",
         "role": "Staff",
@@ -38,5 +38,37 @@
         "mobile": "1020304500",
         "role": "Staff",
         "id": "70b2cfea"
+    },
+    {
+        "name": "Neha",
+        "email": "neha@gmail.com",
+        "password": "Neha@123",
+        "mobile": "9007067234",
+        "role": "Staff",
+        "id": "9e3f5542"
+    },
+    {
+        "name": "Naqueen",
+        "email": "naqueen@gmail.com",
+        "password": "Naqueeb@123",
+        "mobile": "9087654321",
+        "role": "Staff",
+        "id": "32d3c3a1"
+    },
+    {
+        "name": "Samir",
+        "email": "samir@gmail.com",
+        "password": "Samir@123",
+        "mobile": "9000800076",
+        "role": "Staff",
+        "id": "db37eee0"
+    },
+    {
+        "name": "Juhi",
+        "email": "juhi@gmail.com",
+        "password": "Juhi@123",
+        "mobile": "9087654321",
+        "role": "Staff",
+        "id": "086545ba"
     }
 ]

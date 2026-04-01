@@ -1,0 +1,99 @@
+{
+    "starters": [
+        {
+            "name": "manchurian",
+            "half": 80.0,
+            "full": 140.0
+        },
+        {
+            "name": "chilli",
+            "half": 80.0,
+            "full": 150.0
+        },
+        {
+            "name": "leefu",
+            "half": 90.0,
+            "full": 180.0
+        },
+        {
+            "name": "kung pao",
+            "half": 90.0,
+            "full": 180.0
+        },
+        {
+            "name": "drumps of heaven",
+            "half": 130.0,
+            "full": 250.0
+        }
+    ],
+    "main course: veg": [
+        {
+            "name": "mix veg curry",
+            "half": 100.0,
+            "full": 180.0
+        },
+        {
+            "name": "aloo Gobi Masala",
+            "half": 90.0,
+            "full": 160.0
+        },
+        {
+            "name": "dum Aloo",
+            "half": 100.0,
+            "full": 180.0
+        },
+        {
+            "name": "dal Makhani",
+            "half": 120.0,
+            "full": 200.0
+        },
+        {
+            "name": "sahi Paneer",
+            "half": 160.0,
+            "full": 280.0
+        },
+        {
+            "name": "kadhai Paneer",
+            "half": 150.0,
+            "full": 250.0
+        },
+        {
+            "name": "matar Mashroom",
+            "half": 180.0,
+            "full": 250.0
+        },
+        {
+            "index": 8,
+            "name": "paneer Bhurji",
+            "half": null,
+            "full": 300.0
+        }
+    ],
+    "main course: non-veg": [
+        {
+            "name": "chicken Dum Biryani",
+            "half": 180.0,
+            "full": 320.0
+        },
+        {
+            "name": "chicken Handi",
+            "half": 160.0,
+            "full": 300.0
+        },
+        {
+            "name": "chicken sweet & sour",
+            "half": 140.0,
+            "full": 230.0
+        },
+        {
+            "name": "butter Chicken",
+            "half": 220.0,
+            "full": 450.0
+        },
+        {
+            "name": "chicken Fried",
+            "half": 180.0,
+            "full": 350.0
+        }
+    ]
+}

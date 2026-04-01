@@ -1,0 +1,30 @@
+[
+    {
+        "date": "2026-03-31 06:46:23",
+        "items": [
+            {
+                "name": "chicken Handi",
+                "portion": "Full",
+                "price": 300.0,
+                "qty": 2,
+                "total": 600.0
+            }
+        ],
+        "bill_amount": 630.0,
+        "payment": "Cash"
+    },
+    {
+        "date": "2026-03-31 06:48:36",
+        "items": [
+            {
+                "name": "chilli",
+                "portion": "Full",
+                "price": 150.0,
+                "qty": 5,
+                "total": 750.0
+            }
+        ],
+        "bill_amount": 787.5,
+        "payment": "UPI"
+    }
+]
