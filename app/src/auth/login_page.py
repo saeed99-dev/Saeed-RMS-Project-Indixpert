@@ -1,16 +1,19 @@
 from src.filehandling.filemode import Filemode
-from src.dashboard.staff import staff_menu
-from src.dashboard.admin import admin_menu
+from src.domain.staff_menu import staff_dashboard
+from src.domain.admin_menu import admin_interface
 from src.security.validation import Validator
+from src.model.models import PathModel
+from src.utils.tools import sub_heading
+
 
 
 class Login:
     def __init__(self):
-        self.userdata = Filemode().load_data()
+        self.userdata = Filemode().load_data(PathModel().user_data)
 
     def login(self):
         valid=Validator()
-        print("======= Login Portal =======")
+        sub_heading("LOGIN PORTAL : [C A N V A S]")
         found = False
         while True:
             input_email = valid.validemail()
@@ -20,9 +23,9 @@ class Login:
                 if user["email"] == input_email and user["password"] == input_password:
                     print("Login Successfull!")
                     if user["role"] == "Admin":
-                        admin_menu()  # cuurently keeping menu option only later keep all functional menu
+                        admin_interface() 
                     elif user["role"] == "Staff":
-                        staff_menu()
+                        staff_dashboard()
                     found = True
             if found == False:
                 print("User Not Found! Please enter correct email or Password")
