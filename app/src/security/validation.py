@@ -1,3 +1,5 @@
+from pwinput import pwinput
+
 class Validator:
     def __init__(self):
         pass
@@ -5,16 +7,10 @@ class Validator:
     def validname(self):
         while True:
             try:
-                name = input("Enter your name: ").strip()
+                name = input("Enter your name: ").strip().title()
 
                 if not name.isalpha():
                     print("Error: Name must include only alphabet.")
-                    continue
-
-                if not name[0].isupper() or not name[1:].islower():
-                    print(
-                        "Error: First latter of name must be an Uppercase and other should be lowercase."
-                    )
                     continue
 
                 if len(name) < 4:
@@ -68,9 +64,10 @@ class Validator:
                 if not email:
                     print("Gmail can't be empty")
 
-                elif "@gmail.com" not in email:
-                    print("Gmail must contain '@gmail.com'")
-
+                elif "@" not in email:
+                    print("Gmail must contain '@'.")
+                elif "." not in email:
+                    print("Gmail must contain '.'")
                 elif not len(email) > 10:
                     print("Length of Gmail must not be less than 10")
 
@@ -85,7 +82,7 @@ class Validator:
     def validpassword(self):
         while True:
             try:
-                password = input("Enter Your Password: ")
+                password = pwinput("Enter Your Password : ")
 
                 if not len(password) > 5:
                     print("Error: Length of password must not be less than 6 character")
@@ -144,14 +141,15 @@ class Validator:
     def validoption(self):
         while True:
             
-            option=input("\nSelect Your Option: ")
+            option=input("Select Your Option: ")
             if not option:
                 print("Input cannot be empty.\n")
                 continue
             if option.isdigit():
                 self.option=int(option)
                 break
-        
+            else:
+                print("It must be a positive integer only (no letters or symbols).")
         return int(option)
 
 
