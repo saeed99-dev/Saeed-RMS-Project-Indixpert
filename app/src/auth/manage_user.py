@@ -1,10 +1,39 @@
+from src.auth.signup_page import Signup
+from src.auth.login_page import Login
+from src.security.validation import Validator
+from src.utils.tools import exit_program
+from src.utils.tools import display_canvas_logo,sub_heading
 
 def user_menu():
-    print(f"{'='*10} Welcome to Restaurant Management System {'='*10}\n")
-    print("1. Signup")
-    print("2. Login")
-    print("3. Exit")
+    print("\n" + "╔" + "═" * 58 + "╗")
+    print(f"║{'USERS TERMINAL : [C A N V A S]':^58}║")
+    print("╠" + "═" * 58 + "╣")
+    options = [
+        "Signup", 
+        "Login", 
+        "Exit"
+        ]
+    for i,opt in enumerate(options,1):
+        print(f"║ {i}. {opt:54}║")
+    
+    print("╚" + "═" * 58 + "╝")
 
+def user_dashobard():
+    display_canvas_logo("C  A  N  V  A  S","THE ART OF DINING","─── Est. 2026 ───")
+    print("◈◇◈"*20)
 
+    while True:
+        user_menu()
+        valid = Validator()
+        option = valid.validoption()
+        if option == 1:
+            Signup().staff()
+        elif option == 2:
+            Login().login()
+        elif option == 3:
+            exit_program("Exiting","Goodbye! Have a Great Day.")
+            break
+        else:
+            print("PLease select option carefully(option > 0)!")
 
 
