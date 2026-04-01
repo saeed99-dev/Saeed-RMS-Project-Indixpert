@@ -1,38 +1,44 @@
-from src.security.validation import Validator
+# from src.security.validation import Validator
 
-def staff_menu():
-    print("====== Welcome To RMS Staff Dashboard ======")
-    print("1. View Menu")
-    print("2. Take Order")
-    print("3. My Order")
-    print("4. Book Table")
-    print("5. Cancel Order")
-    print("6. View Invoice")
-    print("7. View Profile")
-    print("8. Logout")
+# class Staff:
+
+#     def staff_interface():
+#         print("====== Welcome To RMS Staff Dashboard ======")
+#         print("1. View Menu")  # Done
+#         print("2. Take Order")  # Done
+#         print("3. View Cart")  # Done
+#         print("4. Cancel Order")
+#         print("5. Book Table")
+#         print("6. View Invoice")  
+#         print("7. My Order History")  # Order History # Done
+#         print("8. View Profile")
+#         print("9. Logout")
 
 
-def manage_staff_menu():
-    try:
-        valid=Validator()
-        choice = valid.validoption()
-        if choice == 1:
-            print("View Menu")
-        elif choice == 2:
-            print("Take Order")
-        elif choice == 3:
-            print("My Order")
-        elif choice== 4:
-            print("Book Table")
-        elif choice == 5:
-            print("Cancel Order")
-        elif choice == 6:
-            print("View Invoice")
-        elif choice == 7:
-            print("View Profile")
-        elif choice == 8:
-            print("Logout")
-        else:
-            print("Invalid Choice!")
-    except Exception as e:
-        print(e) 
+#     def manage_dashboard():
+#         try:
+#             while True:
+#                 valid = Validator()
+#                 choice = valid.validoption()
+#                 if choice == 1:
+#                     pass
+#                 elif choice == 2:
+#                     pass
+#                 elif choice == 3:
+#                     pass
+#                 elif choice == 4:
+#                     pass
+#                 elif choice == 5:
+#                     pass
+#                 elif choice == 6:
+#                     pass
+#                 elif choice == 7:
+#                     pass
+#                 elif choice == 8:
+#                     pass
+#                 elif choice == 9:
+#                     print("Logout")
+#                 else:
+#                     print("Invalid Choice!")
+#         except Exception as e:
+#             print(e)
