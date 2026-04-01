@@ -1,17 +1,19 @@
 import uuid
 from src.security.validation import Validator
 from src.filehandling.filemode import Filemode
+from src.model.models import PathModel
+from src.utils.tools import sub_heading
 
 class Signup:
-    
+   
     def staff(self):
         file=Filemode()
-        Filemode().create_file()
-        userdata=file.load_data()
+        Filemode().create_file(PathModel().user_data)
+        userdata=file.load_data(PathModel().user_data)
 
         valid=Validator()
 
-        print("===== Signup Portal =====")
+        sub_heading("SIGNUP PORTAL : [C A N V A S]")
 
         while True:
             email=valid.validemail()
@@ -35,7 +37,7 @@ class Signup:
         }
 
         userdata.append(user)
-        file.save_data(userdata)    
+        file.save_data(userdata,PathModel().user_data)    
         print("Signup Successfully!")
 
 
