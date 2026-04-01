@@ -1,11 +1,3 @@
-# from src.auth.signup import Signup
+from src.auth.manage_user import user_dashobard
+user_dashobard()
 
-# sign=Signup()
-# sign.admin()
-
-from src.dashboard.user_dashboard_manager import user_menu_dashobard
-user_menu_dashobard()
-
-
-# from src.auth.login_page import Login
-# log=Login().login()
