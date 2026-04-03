@@ -5,27 +5,27 @@ from src.utils.tools import exit_program
 from src.utils.tools import display_canvas_logo,sub_heading
 
 def user_menu():
-    print("\n" + "╔" + "═" * 58 + "╗")
-    print(f"║{'USERS TERMINAL : [C A N V A S]':^58}║")
-    print("╠" + "═" * 58 + "╣")
+    print("\n" + "╔" + "═" * 78 + "╗")
+    print(f"║{'USERS TERMINAL : [C A N V A S]':^78}║")
+    print("╠" + "═" * 78 + "╣")
     options = [
         "Signup", 
         "Login", 
         "Exit"
         ]
     for i,opt in enumerate(options,1):
-        print(f"║ {i}. {opt:54}║")
+        print(f"║ {i}. {opt:74}║")
     
-    print("╚" + "═" * 58 + "╝")
+    print("╚" + "═" * 78 + "╝")
 
 def user_dashobard():
     display_canvas_logo("C  A  N  V  A  S","THE ART OF DINING","─── Est. 2026 ───")
-    print("◈◇◈"*20)
+    print("◈◇◈◇"*20)
 
     while True:
         user_menu()
         valid = Validator()
-        option = valid.validoption()
+        option = valid.validoption(1,3)
         if option == 1:
             Signup().staff()
         elif option == 2:

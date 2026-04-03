@@ -2,9 +2,6 @@ import json
 import os
 
 class Filemode:
-    def __init__(self):
-        self.route=r"C:\Indixpert_Saeed\GitHub-nov25-C\Saeed-RMS-Project-Indixpert\app\src\database\user.json"
-        
     def create_file(self,route):
         if not os.path.exists(route):
             with open(route,"w") as file:

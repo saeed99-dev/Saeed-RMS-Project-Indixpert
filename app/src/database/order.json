@@ -26,5 +26,19 @@
         ],
         "bill_amount": 787.5,
         "payment": "UPI"
+    },
+    {
+        "date": "2026-04-02 12:46:54",
+        "items": [
+            {
+                "name": "chicken Dum Biryani",
+                "portion": "Full",
+                "price": 320.0,
+                "qty": 4,
+                "total": 1280.0
+            }
+        ],
+        "bill_amount": 1344.0,
+        "payment": "Debit/Credit Card"
     }
 ]

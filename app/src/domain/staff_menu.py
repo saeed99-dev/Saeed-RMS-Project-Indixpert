@@ -4,6 +4,7 @@ from src.filehandling.filemode import Filemode
 from src.utils.tools import sub_heading
 from src.domain.usersdata import User
 from src.domain.table_menu import TableManager
+from src.security.validation import Validator
 
 
 class Menu:
@@ -19,7 +20,7 @@ class Menu:
         for category, items in self.menu.items():
             print(f"\n{category.upper()}")
             print("-" * 52)
-            print(f"| {"Name":<25}| {"Half":<10}| {"Full":<10}|")
+            print(f"| {"Name":<25}| {"Half":<10}| {"Full":<10}| {'Stock':<10}")
             print("-" * 52)
 
             for item in items:
@@ -30,8 +31,14 @@ class Menu:
 
                 if item["full"]:
                     full = f"₹{item['full']}"
+                
+                stock=item.get("inventory",0)
+                if stock>0:
+                    stock_label=f"{stock}"
+                else:
+                    stock_label="OUT"
 
-                print(f"| {item["name"].capitalize():<25}| {half:<10}| {full:<10}|")
+                print(f"| {item["name"].capitalize():<25}| {half:<10}| {full:<10}| {stock_label:<10}")
             print("=" * 52)
 
     def search_and_order(self):
@@ -53,7 +60,7 @@ class Menu:
         print(f"{'SEARCH RESULTS':>32}")
         print("=" * 52)
         print("-" * 52)
-        print(f"{"SN":<5}{"Name":<25}{"Half":<10}{"Full":<10}")
+        print(f"{"SN":<5}{"Name":<25}{"Half":<10}{"Full":<10}{'Stock':<10}")
         print("-" * 52)
 
         for SN, item in enumerate(result):
@@ -65,11 +72,15 @@ class Menu:
             if item["full"]:
                 full = f"₹{item["full"]}"
 
-            print(f"{(SN+1):<5}{item["name"].capitalize():<25}{half:<10}{full:<10}")
+            print(f"{(SN+1):<5}{item["name"].capitalize():<25}{half:<10}{full:<10}{item['inventory']:<10}")
 
         choice = input("\n Select item to add (or press 'Enter' to cancel): ")
         if choice.isdigit() and 1 <= int(choice) <= len(result):
             selected = result[int(choice) - 1]
+
+            if selected["inventory"] <= 0:
+                print(f"SORRY: {selected['name'].capitalize()} is currently out of stock!")
+                return
 
             size = "f"
             price = 0
@@ -87,9 +98,14 @@ class Menu:
                 price = selected["full"]
                 portion = "Full"
 
-            quantity_input = input("Enter Quantity: ")
+            quantity_input = input(f"Enter Quantity (Available: {selected['inventory']}): ")
             if quantity_input.isdigit() and int(quantity_input) > 0:
                 qty = int(quantity_input)
+
+                if qty > selected["inventory"]:
+                    print(f"FAILED: Only {selected['inventory']} units left in stock.")
+                    return
+                selected["inventory"] -= qty
 
                 order_item = {
                     "name": selected["name"],
@@ -98,6 +114,7 @@ class Menu:
                     "qty": qty,
                     "total": price * qty,
                 }
+
                 self.cart.append(order_item)
                 print(f"SUCCESS: Added {qty} x {portion} {selected['name']} to Cart.")
             else:
@@ -148,7 +165,14 @@ class Menu:
             item_no = input("Enter the Serial Number to remove item: ")
             if item_no.isdigit() and 1 <= int(item_no) <= len(self.cart):
                 removed_item = self.cart.pop(int(item_no) - 1)
-                print(f"SUCESS:{removed_item['name']} removed from cart")
+
+                for category in self.menu.values():
+                    for item in category:
+                        if item["name"] == removed_item["name"]:
+                            item["inventory"] += removed_item["qty"]
+                            break
+
+                print(f"SUCESS:{removed_item['name']} removed from cart and stock restored")
             else:
                 print("Invalid Serial Number!")
         elif choice == "2":
@@ -156,6 +180,12 @@ class Menu:
                 "are you sure, you want to clear the entire cart? (y/n): "
             ).lower()
             if confirm == "y":
+                for cart_item in self.cart:
+                    for category in self.menu.values():
+                        for menu_item in category:
+                            if menu_item["name"] == cart_item["name"]:
+                                menu_item["inventory"] += cart_item["qty"]
+
                 self.cart.clear()
                 print("Your cart is cleared suceesfull.")
             else:
@@ -164,8 +194,10 @@ class Menu:
             print("Returning to Menu...")
 
     def update_menu(self):
-        print("\n--- Update Menu ---")
-        category = input("Enter Category : ").lower()
+        sub_heading("UPDATE MENU")
+        
+        category = input("Enter Category : ").lower().strip()
+
         name = input("Enter Item Name: ").lower()
 
         try:
@@ -176,6 +208,7 @@ class Menu:
                 half = "-"
 
             full = float(input("Full Price: "))
+            stock = int(input("Enter Initial Stock/Inventory: "))
 
             if category not in self.menu:
                 self.menu[category] = []
@@ -185,17 +218,77 @@ class Menu:
                 if item["name"] == name:
                     item["half"] = half
                     item["full"] = full
+                    item["inventory"] = stock
                     updated = True
                     break
 
+
             if not updated:
-                self.menu[category].append({"name": name, "half": half, "full": full})
+                self.menu[category].append({"name": name, "half": half, "full": full, "inventory": stock})
             
             Filemode().save_data(self.menu,PathModel().menu_data)
 
-            print("Menu updated and Saved successfully!")
+            print(f"SUCCESS: {name.capitalize()} updated with {stock} units!")
         except Exception as e:
             print(e)
+    
+    def delete_from_menu(self):
+        """Permanently delete an item from the menu and save to JSON."""
+        sub_heading("DELETE ITEMS")
+        
+        category_input = input("Enter Category: ").strip().lower()
+        
+        target_category = None
+        for cat in self.menu.keys():
+            if cat.lower() == category_input:
+                target_category = cat
+                break
+
+        if not target_category:
+            print("Category not found!")
+            return
+
+        name_to_delete = input("Enter Name to delete: ").strip().lower()
+        original_count = len(self.menu[target_category])
+        
+        temp_list = [
+            item for item in self.menu[target_category] 
+            if item["name"].lower() != name_to_delete
+        ]
+        
+        self.menu[target_category] = temp_list
+
+        if len(self.menu[target_category]) < original_count:
+            print(f"SUCCESS: '{name_to_delete.capitalize()}' removed from menu.")
+            
+            if not self.menu[target_category]:
+                print(f"Category '{target_category}' is now empty and has been removed.")
+                del self.menu[target_category]
+                
+            Filemode().save_data(self.menu,PathModel().menu_data)    
+        else:
+            print(f"Item '{name_to_delete}' not found in the '{target_category}' category.")
+        
+    def update_inventory_only(self):
+        """Quickly restock an existing item."""
+        sub_heading("UPDATE INVENTORY")
+        search = input("\nEnter item name to restock: ").lower()
+        found = False
+        for category, items in self.menu.items():
+            for item in items:
+                if search == item["name"].lower():
+                    try:
+                        add_stock = int(input(f"Current stock for {item['name']} is {item['inventory']}. Add how many? "))
+                        item["inventory"] += add_stock
+                        Filemode().save_data(self.menu,PathModel().menu_data)
+                        print(f"SUCCESS: New stock for {item['name']} is {item['inventory']}.")
+                        found = True
+                        break
+                    except ValueError:
+                        print("Invalid number.")
+                        return
+        if not found:
+            print("Item not found in menu.")
 
     def payment_method(self):
         print("\n" + "-" * 52)
@@ -209,7 +302,7 @@ class Menu:
 
         select = ""
         while True:
-            choice = int(input("\n Select Payment Option(1-5): "))
+            choice = Validator().validoption(1,5)
             if choice == 1:
                 select = "Cash"
             elif choice == 2:
@@ -278,21 +371,21 @@ class Menu:
         for i , order in enumerate(self.order_history,1):
             print(f"\nOrder {i} | Date: {order['date']}")
             print(f"Payment: {order['payment']} | Total: ₹{order['bill_amount']}")
-            print("-" * 60)
+            print("-" * 80)
             for item in order['items']:
                 print(f"- {item['name']} ({item['portion']}) x {item['qty']}")
-            print("=" * 60)
+            print("=" * 80)
 
 def staff_dashboard():
     menu = Menu()
 
     while True:
-        print("\n" + "╔" + "═" * 58 + "╗")
-        print(f"║{'STAFF TERMINAL : [C A N V A S]':^58}║")
-        print("╠" + "═" * 58 + "╣")
+        print("\n" + "╔" + "═" * 78 + "╗")
+        print(f"║{'STAFF TERMINAL : [C A N V A S]':^78}║")
+        print("╠" + "═" * 78 + "╣")
         options = [
             "View Menu", 
-            "Search & Order", 
+            "Search & Add to Cart", 
             "View Cart", 
             "Cancel Order", 
             "Table Management", 
@@ -302,11 +395,11 @@ def staff_dashboard():
             "Back"
             ]
         for i,opt in enumerate(options,1):
-            print(f"║ {i}. {opt:56}║")
+            print(f"║ {i}. {opt:76}║")
         
-        print("╚" + "═" * 58 + "╝")
+        print("╚" + "═" * 78 + "╝")
 
-        choice=int(input("\n Select Option(1-9): "))
+        choice=Validator().validoption(1,9)
 
         if choice==1:
             menu.dislay_menu()

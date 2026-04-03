@@ -1,6 +1,7 @@
-from datetime import datetime
+from datetime import datetime,timedelta
 from src.model.models import PathModel
 from src.filehandling.filemode import Filemode 
+from src.security.validation import Validator
 
 class Table:
     def __init__(self,table_id,capacity):
@@ -8,6 +9,7 @@ class Table:
         self.capacity=capacity
         self.isoccupied=False
         self.current_booking=None
+        self.booking_details={}
     
 class TableManager:
     def __init__(self):
@@ -22,25 +24,33 @@ class TableManager:
         ]
         self.booking_history=[]
 
+        self.available_slots = [
+            "12:00 PM - 02:00 PM",
+            "02:00 PM - 04:00 PM",
+            "04:00 PM - 06:00 PM",
+            "06:00 PM - 08:00 PM",
+            "08:00 PM - 10:00 PM",
+            "10:00 PM - 12:00 AM"
+        ]
+
     def display_table_status(self):
-        print("\n" + "╔" + "═" * 50 + "╗")
-        print(f"║{'TABLE STATUS : [C A N V A S]':^50}║")
-        print("╚" + "═" * 50 + "╝")
+        print("\n" + "╔" + "═" * 60 + "╗")
+        print(f"║{'TABLE STATUS : [C A N V A S]':^60}║")
+        print("╚" + "═" * 60 + "╝")
 
         for table in self.tables:
             if table.isoccupied:
                 status="🔴 OCCUPIED"
+                details=f"Guest: {table.current_booking} | Slot: {table.bookin_details.get('time_slot')}"
+                date_info=f"Date: {table.bookin_details.get('booking_date')}"
             else:
                 status="🟢 AVAILABLE"
-
-            if table.isoccupied:
-                customer=f"Guest: {table.current_booking}"
-            else:
-                customer="Ready for the Guest"
+                details="Ready for the Guest"
+                date_info="N/A"
 
             print(f" ┌── Table {table.table_id:02} ──────────────────────────────┐")
-            print(f" │ Status: {status:<15} Capacity: {table.capacity:<3}   │")
-            print(f" │ {customer:<38}   │")
+            print(f" │ Status: {status:<15} Capacity: {table.capacity:<3} Date: {date_info:<15}  │")
+            print(f" │ {details:<63}   │")
             print(f" └──────────────────────────────────────────┘")
 
 
@@ -52,6 +62,45 @@ class TableManager:
                 return
             guest_count=int(input("Enter number of Guests: "))
 
+            current_date_obj = datetime.now().date()
+            max_future_date_obj = current_date_obj + timedelta(days=7)
+            
+            print(f"\nBooking available from: {current_date_obj.strftime('%d-%m-%Y')} to {max_future_date_obj.strftime('%d-%m-%Y')}")
+            date_input = input("Enter Booking Date (DD-MM-YYYY) [Leave empty for today]: ").strip()
+            
+            if not date_input:
+                booking_date_obj = current_date_obj
+            else:
+                try:
+                    booking_date_obj = datetime.strptime(date_input, "%d-%m-%Y").date()
+                except ValueError:
+                    print("Error: Invalid date format. Please use DD-MM-YYYY.")
+                    return
+            if booking_date_obj < current_date_obj:
+                print(f"Error: Cannot book for a past date ({booking_date_obj.strftime('%d-%m-%Y')}).")
+                return
+            if booking_date_obj > max_future_date_obj:
+                print(f"Error: Bookings only allowed up to 7 days ahead (Max: {max_future_date_obj.strftime('%d-%m-%Y')}).")
+                return
+
+            booking_date_str = booking_date_obj.strftime("%d-%m-%Y")
+            
+            print("\nAvailable Time Slots:")
+            for i, slot in enumerate(self.available_slots, 1):
+                print(f"  {i}. {slot}")
+            
+            slot_choice_raw = input(f"Select Time Slot (1-{len(self.available_slots)}): ")
+            if not slot_choice_raw.isdigit():
+                print("Error: Please enter a valid number for the slot.")
+                return
+                
+            slot_choice = int(slot_choice_raw)
+            if 1 <= slot_choice <= len(self.available_slots):
+                time_slot = self.available_slots[slot_choice - 1]
+            else:
+                print("Error: Invalid slot selection.")
+                return
+
             assigned_table=None
 
             for table in self.tables:
@@ -61,16 +110,22 @@ class TableManager:
 
 
             if assigned_table!=None:
-                booked_time=datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                booking_time=datetime.now().strftime("%d-%m-%Y %H:%M:%S")
 
                 assigned_table.isoccupied=True
                 assigned_table.current_booking=name
+                assigned_table.booking_details = {
+                    "booking_date": booking_date_str,
+                    "time_slot": time_slot
+                }
 
                 table_booked={
                     "name":name,
                     "guests":guest_count,
                     "table_id":assigned_table.table_id,
-                    "time":booked_time,
+                    "book_time":booking_time,
+                    "book_date":booking_date_str,
+                    "time_slot":time_slot,
                     "status":"Active"
                 }
                 self.booking_history.append(table_booked)
@@ -97,10 +152,10 @@ class TableManager:
 
                         table.isoccupied=False
                         table.current_booking=None
+                        table.booking_details={}
 
                         Filemode().save_data(self.booking_history,PathModel().table_data)
                         print(f"Table {table_id} is now free")
-                        
                     else:
                         print("Table is already Empty")
                         return
@@ -118,18 +173,18 @@ class TableManager:
         if not self.booking_history:
             print("No Booking Recorded Yet.")
         else:
-            print(f"{'Time':<20}|{'Guest':<15}|{'Table':<5}|{'Guest'}")
-            print("═"*52)
+            print(f"{'Date':<12} | {'Slot':<20} | {'Guest':<15} | {'T-ID':<5} | {'Count':<5} | {'Status'}")
+            print("─"*90)
             for book in self.booking_history:
-                print(f"{book['time']:<20}|{book['name']:<15}|{book['table_id']:<5}|{book['guests']}")
-                print("═"*52)
+                print(f"{book['book_date']:<12} | {book['time_slot']:<20} | {book['name']:<15} | {book['table_id']:<5} | {book['guests']:<5} | {book['status']}")
+            print("═"*90)
 
     def table_dashboard(self):
 
         while True:
-            print("\n" + "╔" + "═" * 58 + "╗")
-            print(f"║{'MANAGE TABLE : [C A N V A S]':^58}║")
-            print("╠" + "═" * 58 + "╣")
+            print("\n" + "╔" + "═" * 78 + "╗")
+            print(f"║{'MANAGE TABLE : [C A N V A S]':^78}║")
+            print("╠" + "═" * 78 + "╣")
             options = [
                 "View Table Status", 
                 "Book Table", 
@@ -138,11 +193,11 @@ class TableManager:
                 "Back"
                 ]
             for i,opt in enumerate(options,1):
-                print(f"║ {i}. {opt:56}║")
+                print(f"║ {i}. {opt:76}║")
             
-            print("╚" + "═" * 58 + "╝")
+            print("╚" + "═" * 78 + "╝")
 
-            choice=int(input("\n Select Option(1-5): "))
+            choice=Validator().validoption(1,5)
 
             if choice==1:
                 self.display_table_status()

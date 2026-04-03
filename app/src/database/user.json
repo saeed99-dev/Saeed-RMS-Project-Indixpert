@@ -4,15 +4,15 @@
         "email": "asif@gmail.com",
         "password": "Asif@123",
         "mobile": "7519732202",
-        "role": "Staff",
+        "role": "User",
         "id": "965dc81f"
     },
     {
         "name": "Saeed",
-        "email": "saeed@hotmail.com",
+        "email": "saeed@gmail.com",
         "password": "Saeed@123",
         "mobile": "7519732202",
-        "role": "Staff",
+        "role": "Admin",
         "id": "9bbd219c"
     },
     {
@@ -44,7 +44,7 @@
         "email": "neha@gmail.com",
         "password": "Neha@123",
         "mobile": "9007067234",
-        "role": "Staff",
+        "role": "Admin",
         "id": "9e3f5542"
     },
     {
@@ -70,5 +70,13 @@
         "mobile": "9087654321",
         "role": "Staff",
         "id": "086545ba"
+    },
+    {
+        "name": "Neha",
+        "email": "neha@hotmail.com",
+        "password": "Neha@123",
+        "mobile": "8090706543",
+        "role": "Staff",
+        "id": "a4732b34"
     }
 ]

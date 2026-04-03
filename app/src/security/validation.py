@@ -63,20 +63,26 @@ class Validator:
                 email = input("Enter your Gmail: ").strip().lower()
                 if not email:
                     print("Gmail can't be empty")
+                    continue
+                at_count = email.count("@")
+                dot_count = email.count(".")
 
-                elif "@" not in email:
-                    print("Gmail must contain '@'.")
-                elif "." not in email:
-                    print("Gmail must contain '.'")
-                elif not len(email) > 10:
-                    print("Length of Gmail must not be less than 10")
-
+                if at_count != 1:
+                    print("Invalid: Gmail must contain exactly one '@'.")
+                elif dot_count != 1:
+                    print("Invalid: Gmail must contain exactly one '.'.")
+                elif email.find(".") < email.find("@"):
+                    print("Invalid: The '.' must come after the '@' symbol.")
+                elif len(email) < 10:
+                    print("Length of Gmail must not be less than 10 characters.")
+                elif email.startswith("@") or email.endswith("."):
+                    print("Invalid email format (cannot start with @ or end with .).")
                 else:
                     self.email = email
-                    break
+                    return email
+                    
             except Exception as e:
                 print(e)
-        return email
 
 
     def validpassword(self):
@@ -138,15 +144,20 @@ class Validator:
                 print(e)
         return password
 
-    def validoption(self):
+    def validoption(self,min,max):
         while True:
             
-            option=input("Select Your Option: ")
+            option=input(f"Select Your Option ({min}-{max}): ")
             if not option:
                 print("Input cannot be empty.\n")
                 continue
             if option.isdigit():
-                self.option=int(option)
+                val=int(option)
+                if min<=val <=max:
+                    self.option = val
+                    return val
+                else:
+                    print(f"Error: Choice must be between {min} and {max}.\n")
                 break
             else:
                 print("It must be a positive integer only (no letters or symbols).")
@@ -165,3 +176,5 @@ class Validator:
 # Validpassword()
 # Validoption().choice()
 # Valid_id()
+
+# Validator().validoption(1,3)
