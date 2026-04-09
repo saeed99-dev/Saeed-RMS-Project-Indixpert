@@ -1,20 +1,32 @@
 from pwinput import pwinput
+from datetime import datetime
+from src.filehandling.filemode import Filemode
+from src.model.models import PathModel
+import colorama
+from colorama import Fore,Style
+
+colorama.init(autoreset=True)
+
 
 class Validator:
     def __init__(self):
-        pass
+        self.name = None
+        self.number = None
+        self.email = None
+        self.password = None
+        self.option = None
 
     def validname(self):
         while True:
             try:
-                name = input("Enter your name: ").strip().title()
+                name = input(f"{Fore.CYAN}Enter your name: {Style.RESET_ALL}").strip().title()
 
                 if not name.isalpha():
-                    print("Error: Name must include only alphabet.")
+                    print(f"{Fore.RED}Error: Name must include only alphabet.")
                     continue
 
                 if len(name) < 4:
-                    print("Error: Name must include at least 4 character")
+                    print(f"{Fore.RED}Error: Name must include at least 4 character")
                     continue
 
                 repeat = False
@@ -25,77 +37,91 @@ class Validator:
                         break
 
                 if repeat:
-                    print("Error: Name cannot contain more than 2 consecutive repetitive characters.")
+                    print(f"{Fore.RED}Error: Name cannot contain more than 2 consecutive repetitive characters.")
                     continue
                 else:
                     self.name = name
-                    break
+                    return name
             except Exception as e:
-                print(e)
-        return name
+                name_validation_data={
+                "error": str(e),
+                "time": str(datetime.now()),
+                "function name": "validname",
+                }
+                Filemode().append_data(name_validation_data,PathModel().security_log)
+                print(f"{Fore.YELLOW}An unexpected error occurred: {e}")
+        
 
 
     def validnumber(self):
         while True:
             try:
-                number = input("Enter your number: ").strip()
+                number = input(f"{Fore.CYAN}Enter your number: {Style.RESET_ALL}").strip()
 
                 if not number.isdigit():
-                    print("Error: Number must include only whole number.")
+                    print(f"{Fore.RED}Error: Number must include only whole number.")
 
                 elif number[0] == "0":
-                    print("Error: First digit should not be Zero")
+                    print(f"{Fore.RED}Error: First digit should not be Zero")
 
                 elif len(number) != 10:
-                    print("Error: Number must contain 10 digits")
+                    print(f"{Fore.RED}Error: Number must contain 10 digits")
 
                 else:
                     self.number = number
-                    break
+                    return number
             except Exception as e:
-                print(e)
-        return number
+                number_validation_data={
+                "error": str(e),
+                "time": str(datetime.now()),
+                "function name": "validnumber",
+                }
+                Filemode().append_data(number_validation_data,PathModel().security_log)
+                print(f"{Fore.YELLOW}An unexpected error occurred: {e}")
+        
 
 
     def validemail(self):
         while True:
             try:
-                email = input("Enter your Gmail: ").strip().lower()
+                email = input(f"{Fore.CYAN}Enter your Gmail: {Style.RESET_ALL}").strip().lower()
                 if not email:
-                    print("Gmail can't be empty")
+                    print(f"{Fore.RED}Error: Gmail can't be empty")
                     continue
                 at_count = email.count("@")
                 dot_count = email.count(".")
 
                 if at_count != 1:
-                    print("Invalid: Gmail must contain exactly one '@'.")
+                    print(f"{Fore.RED}Invalid: Gmail must contain exactly one '@'.")
                 elif dot_count != 1:
-                    print("Invalid: Gmail must contain exactly one '.'.")
+                    print(f"{Fore.RED}Invalid: Gmail must contain exactly one '.'.")
                 elif email.find(".") < email.find("@"):
-                    print("Invalid: The '.' must come after the '@' symbol.")
+                    print(f"{Fore.RED}Invalid: The '.' must come after the '@' symbol.")
                 elif len(email) < 10:
-                    print("Length of Gmail must not be less than 10 characters.")
+                    print(f"{Fore.RED}Length of Gmail must not be less than 10 characters.")
                 elif email.startswith("@") or email.endswith("."):
-                    print("Invalid email format (cannot start with @ or end with .).")
+                    print(f"{Fore.RED}Invalid email format (cannot start with @ or end with .).")
                 else:
                     self.email = email
                     return email
                     
             except Exception as e:
-                print(e)
+                email_validation_data={
+                "error": str(e),
+                "time": str(datetime.now()),
+                "function name": "validmail",
+                }
+                Filemode().append_data(email_validation_data,PathModel().security_log)
+                print(f"{Fore.YELLOW}An unexpected error occurred: {e}")
 
 
     def validpassword(self):
         while True:
             try:
-                password = pwinput("Enter Your Password : ")
+                password = pwinput(prompt=f"{Fore.CYAN}Enter Your Password: {Style.RESET_ALL}", mask="*")
 
-                if not len(password) > 5:
-                    print("Error: Length of password must not be less than 6 character")
-                    continue
-
-                if len(password) == 0:
-                    print("Password cannot be empty.")
+                if len(password) < 6:
+                    print(f"{Fore.RED}Error: Length of password must not be less than 6 character")
                     continue
 
                 has_upper = False
@@ -113,59 +139,57 @@ class Validator:
                     elif char.isdigit():
                         has_digit = True
 
-                if not has_upper:
-                    print("Password must include at least one uppercase letter.")
-                    continue
-
-                if not has_lower:
-                    print("Password must include at least one lowercase letter.")
-                    continue
-
-                if not has_special:
-                    print("Password must include at least one special character.")
-                    continue
-
-                if not has_digit:
-                    print("Password must include at least one digit.")
+                if not (has_upper and has_lower and has_special and has_digit):
+                    print(f"{Fore.RED}Error: Password must include uppercase, lowercase, digit, and special character.")
                     continue
 
                 repeate = False
                 for i in range(len(password) - 2):
                     if password[i] == password[i + 1] == password[i + 2]:
                         repeate = True
-                        continue
+                        break
 
                 if repeate:
-                    print("Password cannot have more than 2 consecutive similar characters.")
+                    print(f"{Fore.RED}Error: Password cannot have more than 2 consecutive similar characters.")
                 else:
                     self.password = password
-                    break
+                    return password
             except Exception as e:
-                print(e)
-        return password
+                password_validation_data={
+                "error": str(e),
+                "time": str(datetime.now()),
+                "function name": "validpassword",
+                }
+                Filemode().append_data(password_validation_data,PathModel().security_log)
+                print(f"{Fore.YELLOW}An unexpected error occurred: {e}")
 
     def validoption(self,min,max):
         while True:
-            
-            option=input(f"Select Your Option ({min}-{max}): ")
-            if not option:
-                print("Input cannot be empty.\n")
-                continue
-            if option.isdigit():
-                val=int(option)
-                if min<=val <=max:
-                    self.option = val
-                    return val
+            try:
+                option=input(f"{Fore.GREEN}Select Your Option ({min}-{max}): {Style.RESET_ALL}")
+                if not option:
+                    print(f"{Fore.RED}Input cannot be empty.\n")
+                    continue
+
+                if option.isdigit():
+                    val=int(option)
+                    if min<=val <=max:
+                        self.option = val
+                        return val
+                    else:
+                        print(f"{Fore.RED}Error: Choice must be between {min} and {max}.\n")
+                    break
                 else:
-                    print(f"Error: Choice must be between {min} and {max}.\n")
-                break
-            else:
-                print("It must be a positive integer only (no letters or symbols).")
-        return int(option)
+                    print(f"{Fore.RED}Error: It must be a positive integer only (no letters or symbols).")
+            except Exception as e:
+                option_validation_data={
+                "error": str(e),
+                "time": str(datetime.now()),
+                "function name": "validoption",
+                }
+                Filemode().append_data(option_validation_data,PathModel().security_log)
+                print(f"{Fore.YELLOW}An unexpected error occurred: {e}")
 
-
-    def valid_id(self):
-        pass
 
 
 
