@@ -40,5 +40,47 @@
         ],
         "bill_amount": 1344.0,
         "payment": "Debit/Credit Card"
+    },
+    {
+        "date": "2026-04-08 05:57:55",
+        "items": [
+            {
+                "name": "chicken Dum Biryani",
+                "portion": "Full",
+                "price": 320.0,
+                "qty": 2,
+                "total": 640.0
+            }
+        ],
+        "bill_amount": 672.0,
+        "payment": "UPI"
+    },
+    {
+        "date": "2026-04-08 10:52:12",
+        "items": [
+            {
+                "name": "chicken sweet & sour",
+                "portion": "Full",
+                "price": 230.0,
+                "qty": 3,
+                "total": 690.0
+            }
+        ],
+        "bill_amount": 724.5,
+        "payment": "UPI"
+    },
+    {
+        "date": "2026-04-09 09:45:08",
+        "items": [
+            {
+                "name": "chicken Dum Biryani",
+                "portion": "Half",
+                "price": 180.0,
+                "qty": 1,
+                "total": 180.0
+            }
+        ],
+        "bill_amount": 189.0,
+        "payment": "UPI"
     }
 ]
